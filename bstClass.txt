@@ -1,0 +1,111 @@
+Write a BST class, 
+BST class should support insertion, searching, and removal of values, 
+The removal method should only remove the first instance of the target value
+
+
+class BST{
+  construction(value){
+    this.value = value
+    this.left = null
+    this.right = null
+  }
+  
+  insert(value){
+  let newNode = new BST(value)
+    if(value < this.value){
+      // left
+      if(this.left === null){
+          this.left = newNode
+      }else {
+        this.left.insert(value)
+      }
+    }else {
+      // right
+      if(this.right === null){
+        this.right = newNode
+      }else {
+        this.right.insert(value)
+      }
+    } 
+    return this
+  }
+
+  remove(value, parent = null){
+      // If it has two children
+      //    --> loop at the right node to find the left most children, swap the values
+       //     --> call the remove method on the right node --> pass in the node as a parent
+      // if it has only one child
+      // ---> keep track of parent
+       // if there are no children
+       //   --> parent will set the node to null
+      
+      let node = this
+      while(node != null){
+        if(value < node.value){
+          // left 
+          parent = node
+          node = node.left
+        }else if(value > node.value) {
+        // right
+          parent = node
+          node = node.right
+        }else {
+          // found the value
+          if(node.left && node.right){
+              let minValueOnRight = this.node.right.findMinValue()
+              node.value = minValueOnRight
+              node.right.remove(minValueOnRight, node)
+          }else if(node.left || node.right){
+            if(node.left){
+              node.value = node.left.value
+              node.right = node.left.right
+              node.left = node.left.left 
+            }else if(node.right){
+              node.value = node.right.value
+              node.left = node.right.left
+              node.right = node.right.right
+            }
+          }else if(parent !== null){
+            if(parent.left === node){
+              parent.left = node.left ? node.left : node.right
+            }else if (parent.right === node){
+              parent.right = node.left ? node.left: node.right
+            }
+          }else {
+            this.value = null
+          }          
+      
+        }
+      }
+     
+     return this 
+  }
+  
+  
+  findMinValue(){
+    let node = this
+    let result
+    while(node.left){
+      result = node.value
+      node = node.left
+    }
+    return result
+  }
+  
+  contains(value){
+  let node = this
+  while(node != null){
+    if(node.value === value){
+      return true
+    }
+    
+    if(value < node.value){
+      node = node.left
+    }else {
+      node = node.right
+    }
+    
+  }
+  return false
+  }
+}
